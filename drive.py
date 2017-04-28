@@ -213,6 +213,8 @@ def main(argv):
 
     service = build("drive", "v2", http=http)
 
+    mkdir_p("downloaded")
+
     open_logfile()
 
     try:
