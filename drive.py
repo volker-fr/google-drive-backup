@@ -76,10 +76,19 @@ def open_logfile():
 def log(str):
     LOG_FILE.write( (str + '\n').encode('utf8') )
 
+def mkdir_p(path):
+    try:
+        os.makedirs(path)
+    except OSError as exc:
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else:
+            raise exc
+
 def ensure_dir(directory):
     if not os.path.exists(directory):
         log( "Creating directory: %s" % directory )
-        os.makedirs(directory)
+	mkdir_p (directory)
 
 def is_google_doc(drive_file):
     return True if re.match( '^application/vnd\.google-apps\..+', drive_file['mimeType'] ) else False
