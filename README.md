@@ -15,8 +15,8 @@ A python script to sync your google drive contents.
 `easy_install --upgrade google-api-python-client`
 
 ## Setup
-* Edit `client_secrets_sample.json` and add your Google API client id and client secret (If you don't have one, [get it here](https://code.google.com/apis/console/)).
-* Save it as `client_secrets.json`.
+* Create and download your client secrets file, following the directions [here](https://developers.google.com/identity/sign-in/web/devconsole-project). Note that the Authorised Redirect URIs might require a trailing slash, whereas the JavaScript origins must not have one.
+* Copy the client secrets file to "client_secrets.json" in the same directory as the drive.py script.
 * Now, if you run `python drive.py`, a browser window/tab will open for you to authenticate the script.
 * Once authentication is done, the script will start downloading your *My Drive*. Refer the next section for more options.
 
