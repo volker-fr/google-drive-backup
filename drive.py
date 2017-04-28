@@ -20,7 +20,6 @@ __author__ = 'viky.nandha@gmail.com (Vignesh Nandha Kumar)'
 
 import gflags, httplib2, logging, os, pprint, sys, re, time
 import pprint
-import errno
 
 from apiclient.discovery import build
 from oauth2client.file import Storage
@@ -77,14 +76,22 @@ def open_logfile():
 def log(str):
     LOG_FILE.write( (str + '\n').encode('utf8') )
 
+def append_rename(path, count):
+    try_path = path + str(count)
+    if os.path.exists(try_path):
+        append_rename(path, count + 1)
+    else:
+        os.makedirs(try_path)
+
 def mkdir_p(path):
     try:
         os.makedirs(path)
     except OSError as exc:
-        if exc.errno == errno.EEXIST and os.path.isdir(path):
+        if (os.path.isdir(path)):
             pass
         else:
-            raise exc
+            append_rename(path, 0)
+            mkdir_p(path)
 
 def ensure_dir(directory):
     if not os.path.exists(directory):
