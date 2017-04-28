@@ -1,3 +1,4 @@
+#!/usr/bin/python
 """Simple command-line sample for the Google Drive API.
 
 Command-line application that retrieves the list of files in google drive.
@@ -23,7 +24,7 @@ import pprint
 from apiclient.discovery import build
 from oauth2client.file import Storage
 from oauth2client.client import AccessTokenRefreshError, flow_from_clientsecrets
-from oauth2client.tools import run
+from oauth2client import tools
 
 
 FLAGS = gflags.FLAGS
@@ -194,7 +195,7 @@ def main(argv):
     credentials = storage.get()
 
     if credentials is None or credentials.invalid:
-        credentials = run(FLOW, storage)
+        credentials = tools.run_flow(FLOW, storage)
 
     # Create an httplib2.Http object to handle our HTTP requests and authorize it
     # with our good Credentials.
