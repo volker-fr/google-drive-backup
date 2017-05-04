@@ -92,7 +92,8 @@ def mkdir_p(path):
         if (os.path.isdir(path)):
             pass
         else:
-            append_rename(path, 0)
+            # This deals with files and directories of same name in same place
+            append_rename(path, 0) 
             mkdir_p(path)
 
 def ensure_dir(directory):
