@@ -77,11 +77,13 @@ def log(str):
     LOG_FILE.write( (str + '\n').encode('utf8') )
 
 def append_rename(path, count):
-    try_path = path + str(count)
+    without_slash = path.rstrip(os.sep)
+    try_path = without_slash + str(count)
     if os.path.exists(try_path):
         append_rename(path, count + 1)
     else:
-        os.makedirs(try_path)
+	print([without_slash, try_path])
+        os.rename(without_slash, try_path)
 
 def mkdir_p(path):
     try:
