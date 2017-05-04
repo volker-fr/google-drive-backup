@@ -177,7 +177,7 @@ def download_file( service, drive_file, dest_path ):
     if download_url:
         try:
             resp, content = service._http.request(download_url)
-        except httplib2.IncompleteRead:
+        except: #httplib2.IncompleteRead: # no longer exists
             log( 'Error while reading file %s. Retrying...' % drive_file['title'].replace( '/', '_' ) )
             download_file( service, drive_file, dest_path )
             return False
