@@ -20,6 +20,7 @@ __author__ = 'viky.nandha@gmail.com (Vignesh Nandha Kumar)'
 
 import gflags, httplib2, logging, os, pprint, sys, re, time
 import pprint
+import traceback
 
 from apiclient.discovery import build
 from oauth2client.file import Storage
@@ -177,8 +178,8 @@ def download_file( service, drive_file, dest_path ):
     if download_url:
         try:
             resp, content = service._http.request(download_url)
-        except: #httplib2.IncompleteRead: # no longer exists
-            log( 'Error while reading file %s. Retrying...' % drive_file['title'].replace( '/', '_' ) )
+        except Exception as e: #httplib2.IncompleteRead: # no longer exists
+            log( traceback.format_exc(e) + ' Error while reading file %s. Retrying...' % drive_file['title'].replace( '/', '_' ) )
             download_file( service, drive_file, dest_path )
             return False
         if resp.status == 200:
