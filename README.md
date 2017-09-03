@@ -30,3 +30,36 @@ Following command line options are available.
 **--logfile** - Path to the file to which the logs should be written to. By default, writes to `drive.log` in the current directory. The file will be overwritten every time the script is run.
 
 **--drive_id** ID of the folder which you want to download. By default, entire "My Drive" is downloaded.
+
+**--noauth_local_webserver** Allow to fetch google oauth credentials if you run this script on a system without a browser
+
+
+## Running google-drive-backup in Docker
+
+### Create docker container
+```shell
+make build
+```
+
+### Fetch credentials
+```shell
+docker run --rm -it \
+    -v "$HOME/client_secret_gdrive-backup.json:/client_secrets.json" \
+    -v "/tmp/gdrive-creds.json:/drive.dat" \
+    google-drive-backup \
+    --noauth_local_webserver
+```
+
+### Synchronize files to local folder
+```shell
+docker run --rm -it \
+    -v "$HOME/client_secret_gdrive-backup.json:/client_secrets.json" \
+    -v "/tmp/gdrive-creds.json:/drive.dat" \
+    -v "/tmp/gdrive:/gdrive" \
+    -v "/tmp/logfile.txt:/logfile.txt" \
+    google-drive-backup \
+    --debug \
+    --destination /gdrive/ \
+    --logfile /logfile.txt \
+    --logging_level=DEBUG
+```

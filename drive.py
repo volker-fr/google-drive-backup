@@ -66,16 +66,17 @@ gflags.DEFINE_string('destination', 'downloaded/', 'Destination folder location'
 gflags.DEFINE_boolean('debug', False, 'Log folder contents as being fetched' )
 gflags.DEFINE_string('logfile', 'drive.log', 'Location of file to write the log' )
 gflags.DEFINE_string('drive_id', 'root', 'ID of the folder whose contents are to be fetched' )
+gflags.DEFINE_boolean('noauth_local_webserver', False, 'Google authentication if the browser is not on the local system' )
 
 
 def open_logfile():
     if not re.match( '^/', FLAGS.logfile ):
         FLAGS.logfile = FLAGS.destination + FLAGS.logfile
     global LOG_FILE
-    LOG_FILE = open( FLAGS.logfile, 'w+' )
+    LOG_FILE = open( FLAGS.logfile, 'w+b' )
 
-def log(str):
-    LOG_FILE.write( (str + '\n').encode('utf8') )
+def log(log):
+    LOG_FILE.write( (log + '\n').encode('utf8') )
 
 def append_rename(path, count):
     without_slash = path.rstrip(os.sep)
@@ -83,7 +84,7 @@ def append_rename(path, count):
     if os.path.exists(try_path):
         append_rename(path, count + 1)
     else:
-	print([without_slash, try_path])
+        print([without_slash, try_path])
         os.rename(without_slash, try_path)
 
 def mkdir_p(path):
@@ -100,7 +101,7 @@ def mkdir_p(path):
 def ensure_dir(directory):
     if not os.path.exists(directory):
         log( "Creating directory: %s" % directory )
-	mkdir_p (directory)
+        mkdir_p (directory)
 
 def is_google_doc(drive_file):
     return True if re.match( '^application/vnd\.google-apps\..+', drive_file['mimeType'] ) else False
@@ -184,11 +185,11 @@ def download_file( service, drive_file, dest_path ):
             return False
         if resp.status == 200:
             try:
-                target = open( file_location, 'w+' )
+                target = open( file_location, 'w+b' )
             except:
                 log( "Could not open file %s for writing. Please check permissions." % file_location )
                 return False
-            target.write( content )
+            target.write(content)
             return True
         else:
             log( 'An error occurred: %s' % resp )
@@ -202,8 +203,8 @@ def main(argv):
     # Let the gflags module process the command-line arguments
     try:
         argv = FLAGS(argv)
-    except gflags.FlagsError, e:
-        print '%s\\nUsage: %s ARGS\\n%s' % (e, argv[0], FLAGS)
+    except gflags.FlagsError as e:
+        print('%s\\nUsage: %s ARGS\\n%s' % (e, argv[0], FLAGS))
         sys.exit(1)
 
     # Set the logging according to the command-line flag
